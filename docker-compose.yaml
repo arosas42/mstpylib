@@ -1,0 +1,14 @@
+version: "3.8"
+services:
+  mstpylib:
+    container_name: mstpylib
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+    volumes:
+    - type: bind
+      source: .
+      target: /local/mstpylib
+    command:
+    - sleep
+    - infinity

@@ -1,0 +1,4 @@
+build/
+dist/
+mstpylib.egg-info/
+.pypirc
