@@ -129,7 +129,7 @@ class MySQLObject:
             return shared_connections[self]
         else:
             self.conn = mysql.connector.connect(
-                host=target_host, user=user, password=passwd, database=database)
+                host=target_host, user=user, password=passwd, database=database, autocommit=True)
             self.__set_session__()
 
         if shared_pooling:
@@ -154,6 +154,26 @@ class MySQLObject:
             else:
                 self.conn.close()
                 self.conn = None
+
+    # Begin-Doc
+    # Name: SQL_AutoCommit
+    # Type: method
+    # Description: turns on/off autocommit
+    # End-Doc
+    def SQL_AutoCommit(self, val):
+        if not self.conn.is_connected():
+            self.__reconnect__()
+        self.conn.autocommit = val
+
+    # Begin-Doc
+    # Name: SQL_Commit
+    # Type: method
+    # Description: commits a transaction
+    # End-Doc
+    def SQL_Commit(self):
+        if not self.conn.is_connected():
+            self.__reconnect__()
+        self.conn.commit()
 
     # Begin-Doc
     # Name: SQL_ExecQuery
