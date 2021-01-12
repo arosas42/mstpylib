@@ -1,5 +1,5 @@
 # Begin-Doc
-# Name: db.py
+# Name: dbs.py
 # Type: package
 # Description: Implements MySQLObject class
 # End-Doc

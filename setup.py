@@ -2,7 +2,7 @@ import setuptools
 
 setuptools.setup(
     name="mstpylib",
-    version="0.1.0",
+    version="0.1.1",
     author="Missouri University of Science and Technology - Information Technology",
     author_email="it-ai@mst.edu",
     description="A collection of code snippets for interfacing python with our applications infrastructure",
