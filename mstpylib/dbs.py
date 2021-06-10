@@ -216,6 +216,17 @@ class MySQLObject:
         return cursor.fetchone()
 
     # Begin-Doc
+    # Name: SQL_DoQuery
+    # Type: method
+    # Description: Executes a SQL query and returns a singular row
+    # End-Doc
+    def SQL_DoQuery(self, query, params=None):
+        cid = self.SQL_OpenQuery(query, params)
+        res = self.SQL_FetchRow(cid)
+        self.SQL_CloseQuery(cid)
+        return res
+
+    # Begin-Doc
     # Name: SQL_FetchRow_LowerDict
     # Type: method
     # Description: Grabs a single row from an open cursor defined on key/value pairs of column_name/column_value
