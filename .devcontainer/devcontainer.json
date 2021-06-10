@@ -2,9 +2,6 @@
     "name": "mstpylib",
     "dockerComposeFile": "../docker-compose.yaml",
     "service": "mstpylib",
-    "appPort": [
-        "5000:5000"
-    ],
     "context": "..",
     "workspaceFolder": "/local/mstpylib",
     "workspaceMount": "source=${localWorkspaceFolder},target=/local/mstpylib,type=bind",
