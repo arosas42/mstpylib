@@ -227,6 +227,15 @@ class MySQLObject:
         return res
 
     # Begin-Doc
+    # Name: SQL_FetchRow_Dict
+    # Type: method
+    # Description: Grabs a single row from an open cursor, returns dictionary defined in key/value pairs of column_name => column_value
+    # End-Doc
+    def SQL_FetchRow_Dict(self, cursor):
+        if vals := self.SQL_FetchRow(cursor):
+            return dict(zip(cursor.column_names, vals))
+
+    # Begin-Doc
     # Name: SQL_FetchRow_LowerDict
     # Type: method
     # Description: Grabs a single row from an open cursor defined on key/value pairs of column_name/column_value
