@@ -46,9 +46,10 @@ class SimpleRPCClient:
     def _headers(self):
         headers = {"User-Agent": "mstpylib/SimpleRPCClient:v1.0"}
         if self.username is not None and self.password is not None:
-            basic_auth = base64.encodestring(
-                f"{self.username}:{self.password}")
-            headers["Authentication"] = f"Basic {basic_auth}"
+            basic_auth = base64.b64encode(
+                f"{self.username}:{self.password}".encode('utf-8')
+            ).decode('utf-8')
+            headers["Authorization"] = f"Basic {basic_auth}"
         return headers
 
     # Begin-Doc
