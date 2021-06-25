@@ -90,3 +90,16 @@ def list(actor=None):
 def member_users(group, actor=None):
     res = rpc().MemberUsers(group=group, actor=actor)
     return res[0][group]
+
+
+# Begin-Doc
+# Name: member_users_multi
+# Type: method
+# Description: Returns dictionary of users that are members of each group
+# Syntax: members_by_group = netgroup.member_users_multi(group1, group2, ...)
+# End-Doc
+
+@ttl_cache(DEFAULT_TTL)
+def member_users_multi(*args, actor=None):
+    res = rpc().MemberUsers(group=args, actor=actor)
+    return res[0]
