@@ -47,7 +47,7 @@ class SimpleRPCClient:
             self.authenticate = True
 
         if self.authenticate:
-            if _ := re.search(r'^http:', base_url):
+            if _ := re.search(r'^http:', base_url) and allow_unsafe is False:
                 raise ValueError(
                     "will not allow authenticated request on plaintext url, override with allow_unsafe=True")
 
