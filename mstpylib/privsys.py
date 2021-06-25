@@ -38,7 +38,7 @@ def simple_public_rpc():
 @ttl_cache(DEFAULT_TTL)
 def check_priv(user, code):
     rpc = simple_public_rpc()
-    val = rpc.CheckPriv({"user": user, "code": code})
+    val = rpc.CheckPriv(user=user, code=code)
     return val[0] == 1
 
 # Begin-Doc
@@ -70,4 +70,4 @@ def check_priv_regex(user, regex):
 @ttl_cache(DEFAULT_TTL)
 def fetch_privs(user):
     rpc = simple_public_rpc()
-    return rpc.FetchPrivs({"user": user})
+    return rpc.FetchPrivs(user=user)

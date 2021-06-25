@@ -79,13 +79,32 @@ class SimpleRPCClient:
     # Type: method
     # Description: worker method that implements the RPC operation
     # End-Doc
-    def CallRPC(self, name, args=None):
+    def CallRPC(self, name, *args, **kwargs):
         url = f"{self.base_url}/{name}"
         data = None
-        if args is not None:
-            data = urllib.parse.urlencode(args).encode()
+
+        parts = []
+        parts.extend([urllib.parse.quote(a) for a in args])
+
+        for k, v in kwargs.items():
+            k_clean = urllib.parse.quote(k)
+            if v is None:
+                parts.append(f"{k_clean}=")
+            elif v is not list:
+                v_clean = urllib.parse.quote(v)
+                parts.append(f"{k_clean}={v_clean}")
+            else:
+                parts.extend([f"{k_clean}={urllib.parse.quote(val)}" for val in v])
+
+        if len(parts) > 0:
+            data = "&".join(parts).encode()
+
         req = urllib.request.Request(
-            url=url, headers=self._headers(), data=data, method="POST")
+            url=url, 
+            headers=self._headers(), 
+            data=data, 
+            method="POST"
+        )
         resp = urllib.request.urlopen(req)
 
         val, msg, *data = json.loads(resp.read())
