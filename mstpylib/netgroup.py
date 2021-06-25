@@ -62,8 +62,8 @@ def rpc():
 
 @ttl_cache(DEFAULT_TTL)
 def exists(group, actor=None):
-    res = rpc().Exists(group=group, actor=actor)
-    return group in res[0] and res[0][group] == 1
+    [res] = rpc().Exists(group=group, actor=actor)
+    return group in res and res[group] == 1
 
 # Begin-Doc
 # Name: list
@@ -75,8 +75,8 @@ def exists(group, actor=None):
 
 @ttl_cache(DEFAULT_TTL)
 def list(actor=None):
-    info = rpc().List(actor=actor)
-    return info[0]
+    [info] = rpc().List(actor=actor)
+    return info
 
 # Begin-Doc
 # Name: member_users
@@ -88,8 +88,8 @@ def list(actor=None):
 
 @ttl_cache(DEFAULT_TTL)
 def member_users(group, actor=None):
-    res = rpc().MemberUsers(group=group, actor=actor)
-    return res[0][group]
+    [res] = rpc().MemberUsers(group=group, actor=actor)
+    return res[group]
 
 
 # Begin-Doc
@@ -101,5 +101,5 @@ def member_users(group, actor=None):
 
 @ttl_cache(DEFAULT_TTL)
 def member_users_multi(*args, actor=None):
-    res = rpc().MemberUsers(group=args, actor=actor)
-    return res[0]
+    [res] = rpc().MemberUsers(group=args, actor=actor)
+    return res

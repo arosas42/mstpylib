@@ -38,8 +38,8 @@ def simple_public_rpc():
 @ttl_cache(DEFAULT_TTL)
 def check_priv(user, code):
     rpc = simple_public_rpc()
-    val = rpc.CheckPriv(user=user, code=code)
-    return val[0] == 1
+    [val] = rpc.CheckPriv(user=user, code=code)
+    return val == 1
 
 # Begin-Doc
 # Name: check_priv
@@ -49,12 +49,11 @@ def check_priv(user, code):
 
 @ttl_cache(DEFAULT_TTL)
 def check_priv_regex(user, regex):
-    rpc = simple_public_rpc()
     privs = fetch_privs(user)
     privs.extend(fetch_privs("public"))
 
     for priv in privs:
-        if match := re.search(regex, priv):
+        if _ := re.search(regex, priv):
             return True
 
     return False
