@@ -1,6 +1,7 @@
 build/
 dist/
 mstpylib.egg-info/
+.vscode
 .pypirc
 *.pyc
 __pycache__/*
