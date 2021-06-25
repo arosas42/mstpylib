@@ -7,6 +7,9 @@ import urllib.request
 import urllib.parse
 import json
 import base64
+import re
+import getpass
+from mstpylib import authsrv
 
 # Begin-Doc
 # Name: SimpleRPCClient
@@ -33,10 +36,29 @@ class SimpleRPCClient:
     # Type: method
     # Description: instantiates new SimpleRPCClient object
     # End-Doc
-    def __init__(self, base_url, username=None, password=None):
+    def __init__(self, base_url, username=None, password=None, authenticate=False, allow_unsafe=False):
         self.base_url = base_url
         self.username = username
         self.password = password
+        self.allow_unsafe = allow_unsafe
+        self.authenticate = authenticate
+
+        if _ := re.search(r'auth-cgi-bin|auth-perl-bin', base_url):
+            self.authenticate = True
+
+        if self.authenticate:
+            if _ := re.search(r'^http:', base_url):
+                raise ValueError(
+                    "will not allow authenticated request on plaintext url, override with allow_unsafe=True")
+
+            if self.username is None:
+                self.username = getpass.getuser()
+
+            if self.password is None:
+                self.password = authsrv.fetch(
+                    user=self.username,
+                    instance="ads"
+                )
 
     # Begin-Doc
     # Name: _headers
