@@ -5,6 +5,7 @@
 # End-Doc
 import getpass
 import subprocess
+from mstpylib.usage_logger import LogAPIUsage
 
 # Begin-Doc
 # Name: fetch
@@ -14,6 +15,8 @@ import subprocess
 
 
 def fetch(owner=getpass.getuser(), user=None, instance=None):
+    LogAPIUsage()
+
     if owner != getpass.getuser() and getpass.getuser() != "root":
         owner = getpass.getuser()
 

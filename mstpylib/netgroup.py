@@ -4,6 +4,7 @@
 # Description: Package/wrapper around Netgroup RPC calls
 # End-Doc
 from mstpylib.simplerpc import SimpleRPCClient
+from mstpylib.usage_logger import LogAPIUsage
 from mstpylib import local_env
 import ttl_cache
 
@@ -33,6 +34,8 @@ def login(username, password):
 
 def rpc():
     global netgroup_rpc, rpc_auth_pass, rpc_auth_user
+    LogAPIUsage()
+
     if netgroup_rpc is not None:
         return netgroup_rpc
 
@@ -62,6 +65,8 @@ def rpc():
 
 @ttl_cache(DEFAULT_TTL)
 def exists(group, actor=None):
+    LogAPIUsage()
+
     [res] = rpc().Exists(group=group, actor=actor)
     return group in res and res[group] == 1
 
@@ -75,6 +80,8 @@ def exists(group, actor=None):
 
 @ttl_cache(DEFAULT_TTL)
 def list(actor=None):
+    LogAPIUsage()
+
     [info] = rpc().List(actor=actor)
     return info
 
@@ -88,6 +95,8 @@ def list(actor=None):
 
 @ttl_cache(DEFAULT_TTL)
 def member_users(group, actor=None):
+    LogAPIUsage()
+
     [res] = rpc().MemberUsers(group=group, actor=actor)
     return res[group]
 
@@ -101,5 +110,7 @@ def member_users(group, actor=None):
 
 @ttl_cache(DEFAULT_TTL)
 def member_users_multi(*args, actor=None):
+    LogAPIUsage()
+
     [res] = rpc().MemberUsers(group=args, actor=actor)
     return res

@@ -9,6 +9,7 @@ import json
 import base64
 import re
 import getpass
+from mstpylib.usage_logger import LogAPIUsage
 from mstpylib import authsrv
 
 # Begin-Doc
@@ -42,6 +43,8 @@ class SimpleRPCClient:
         self.password = password
         self.allow_unsafe = allow_unsafe
         self.authenticate = authenticate
+
+        LogAPIUsage()
 
         if _ := re.search(r'auth-cgi-bin|auth-perl-bin', base_url):
             self.authenticate = True

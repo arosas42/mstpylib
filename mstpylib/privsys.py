@@ -3,6 +3,7 @@
 # Type: package
 # Description: Privsys namespace 
 # End-Doc
+from mstpylib.usage_logger import LogAPIUsage
 from mstpylib.simplerpc import SimpleRPCClient
 from mstpylib import local_env, authsrv
 import ttl_cache
@@ -14,6 +15,8 @@ PUBLIC_RPC = None
 
 def simple_public_rpc():
     global PUBLIC_RPC
+    LogAPIUsage()
+
     if PUBLIC_RPC is not None:
         return PUBLIC_RPC
 
@@ -37,6 +40,8 @@ def simple_public_rpc():
 
 @ttl_cache(DEFAULT_TTL)
 def check_priv(user, code):
+    LogAPIUsage()
+
     rpc = simple_public_rpc()
     [val] = rpc.CheckPriv(user=user, code=code)
     return val == 1
@@ -49,6 +54,8 @@ def check_priv(user, code):
 
 @ttl_cache(DEFAULT_TTL)
 def check_priv_regex(user, regex):
+    LogAPIUsage()
+
     privs = fetch_privs(user)
     privs.extend(fetch_privs("public"))
 
@@ -68,5 +75,7 @@ def check_priv_regex(user, regex):
 
 @ttl_cache(DEFAULT_TTL)
 def fetch_privs(user):
+    LogAPIUsage()
+
     rpc = simple_public_rpc()
     return rpc.FetchPrivs(user=user)

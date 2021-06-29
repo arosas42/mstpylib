@@ -3,7 +3,7 @@
 # Type: package
 # Description: Implements MySQLObject class
 # End-Doc
-
+from mstpylib.usage_logger import LogAPIUsage
 from mstpylib import local_env, authsrv
 import re
 import getpass
@@ -41,6 +41,7 @@ class MySQLObject:
         self.database = None
         self.shared = False
         self.wait_timeout = WAIT_TIMEOUT
+        LogAPIUsage()
 
     # Begin-Doc
     # Name: __hash__
