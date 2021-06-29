@@ -9,6 +9,9 @@ services:
     - type: bind
       source: .
       target: /local/mstpylib
+    - type: bind
+      source: ~/.kube
+      target: /root/.kube
     command:
     - sleep
     - infinity
