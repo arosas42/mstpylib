@@ -54,8 +54,8 @@ def LogAPIUsage(msg=None):
     authuser = None
     cwd = os.getcwd()
 
-    if 'flask' in sys.modules:
-        request = sys.modules['flask'].request
+    if "flask" in sys.modules:
+        request = sys.modules["flask"].request
         authuser = request.environ.get("REMOTE_USER")
         server = request.host
 
