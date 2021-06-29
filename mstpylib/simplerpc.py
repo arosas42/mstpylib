@@ -90,7 +90,7 @@ class SimpleRPCClient:
             k_clean = urllib.parse.quote(k)
             if v is None:
                 parts.append(f"{k_clean}=")
-            elif type(v) is tuple or type(v) is list:
+            elif type(v) in (tuple, list):
                 parts.extend([f"{k_clean}={urllib.parse.quote(val)}" for val in v])
             else:
                 v_clean = urllib.parse.quote(v)
