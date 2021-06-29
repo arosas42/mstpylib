@@ -5,6 +5,7 @@ import inspect
 import re
 import getpass
 import ttl_cache
+import urllib.parse
 
 IGNORE = False
 DEFAULT_TTL = 5
@@ -13,6 +14,12 @@ server = None
 usage_logger_script = None
 usage_logger_owner = None
 usage_logger_type = None
+usage_socket = None
+last_socket_pid = None
+
+# keep this in sync with apiusage-feed.srv.mst.edu, hardcoded to avoid extra dns lookups
+server_ip = "131.151.249.129"
+server_port = 2407
 
 def LogAPIUsage(msg=None):
     global server, usage_logger_script, usage_logger_owner, usage_logger_type
@@ -76,4 +83,20 @@ def LogAPIUsage(msg=None):
 
 @ttl_cache(DEFAULT_TTL)
 def _SendUsagePacket(**kwargs):
-    print(f"LogAPIUsage: {kwargs}")
+    global usage_socket, last_socket_pid, server_ip, server_port
+
+    parts = []
+    for key, value in kwargs.items():
+        k = urllib.parse.quote(key, safe="")
+        if value is not None:
+            v = urllib.parse.quote(value, safe="")
+            parts.append(f"{k}={v}")
+    data = "&".join(parts).encode('utf-8')
+
+    if last_socket_pid != os.getpid():
+        usage_socket = _OpenUsageSocket()
+    
+    usage_socket.sendto(data, (server_ip, server_port))
+
+def _OpenUsageSocket():
+    return socket.socket(socket.AF_INET, socket.SOCK_DGRAM | socket.SOCK_NONBLOCK)
