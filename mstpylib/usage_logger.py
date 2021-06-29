@@ -1,3 +1,8 @@
+# Begin-Doc
+# Name: usage_logger
+# Type: module
+# Description: track usage of apis and scripts in mstpylib/python portfolio
+# End-Doc
 import sys
 import socket
 import os
@@ -21,6 +26,13 @@ last_socket_pid = None
 server_ip = "131.151.249.129"
 server_port = 2407
 
+# Begin-Doc
+# Name: LogAPIUsage
+# Type: function
+# Description: Collects execution data and sends udp packet to apiusage-feed.srv.mst.edu
+# End-Doc
+
+
 def LogAPIUsage(msg=None):
     global server, usage_logger_script, usage_logger_owner, usage_logger_type
     # allow application request that we not log anything
@@ -34,7 +46,7 @@ def LogAPIUsage(msg=None):
     for frame in stack[1:]:
         caller_frame, caller_file, caller_line, caller_name, *_ = frame
         if (os.path.basename(caller_file), caller_name) not in skip_decorators:
-            break 
+            break
 
     if server is None:
         server = socket.gethostname()
@@ -45,14 +57,14 @@ def LogAPIUsage(msg=None):
     if 'flask' in sys.modules:
         request = sys.modules['flask'].request
         authuser = request.environ.get("REMOTE_USER")
-        server = request.host 
+        server = request.host
 
     if usage_logger_script is None:
         usage_logger_script = sys.argv[0]
 
     if usage_logger_owner is None:
         if m := re.search(r'^/local/(.*?)/', usage_logger_script):
-            usage_logger_owner = m[1] 
+            usage_logger_owner = m[1]
 
     if usage_logger_type is None:
         if "VSCODE_IPC_HOOK_CLI" in os.environ:
@@ -62,8 +74,7 @@ def LogAPIUsage(msg=None):
         elif "PS1" in os.environ:
             usage_logger_type = "shell"
         else:
-            usage_logger_type = "unknown" 
-
+            usage_logger_type = "unknown"
 
     _SendUsagePacket(
         msg=msg,
@@ -81,6 +92,12 @@ def LogAPIUsage(msg=None):
         type=usage_logger_type
     )
 
+
+# Begin-Doc
+# Name: _SendUsagePacket
+# Type: internal function
+# Description: urlencodes delivery packet and sends data over udp to apiusage-feed.srv.mst.edu
+# End-Doc
 @ttl_cache(DEFAULT_TTL)
 def _SendUsagePacket(**kwargs):
     global usage_socket, last_socket_pid, server_ip, server_port
@@ -94,9 +111,7 @@ def _SendUsagePacket(**kwargs):
     data = "&".join(parts).encode('utf-8')
 
     if last_socket_pid != os.getpid():
-        usage_socket = _OpenUsageSocket()
-    
-    usage_socket.sendto(data, (server_ip, server_port))
+        usage_socket = socket.socket(
+            socket.AF_INET, socket.SOCK_DGRAM | socket.SOCK_NONBLOCK)
 
-def _OpenUsageSocket():
-    return socket.socket(socket.AF_INET, socket.SOCK_DGRAM | socket.SOCK_NONBLOCK)
+    usage_socket.sendto(data, (server_ip, server_port))
