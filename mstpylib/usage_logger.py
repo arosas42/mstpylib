@@ -21,9 +21,7 @@ usage_logger_owner = None
 usage_logger_type = None
 usage_socket = None
 last_socket_pid = None
-
-# keep this in sync with apiusage-feed.srv.mst.edu, hardcoded to avoid extra dns lookups
-server_ip = "131.151.249.129"
+server_ip = None 
 server_port = 2407
 
 # Begin-Doc
@@ -113,5 +111,8 @@ def _SendUsagePacket(**kwargs):
     if last_socket_pid != os.getpid():
         usage_socket = socket.socket(
             socket.AF_INET, socket.SOCK_DGRAM | socket.SOCK_NONBLOCK)
+
+    if server_ip is None:
+        server_ip = socket.gethostbyname("apiusage-feed.srv.mst.edu")
 
     usage_socket.sendto(data, (server_ip, server_port))
