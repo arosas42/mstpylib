@@ -17,20 +17,18 @@ __all__ = ["setuid"]
 
 def setuid(user):
     target_uid = None
+    target_gid = None
     target_home = None
 
     if isinstance(user, int):
-        target_uid = user
-        tmp = pwd.getpwuid(user)
-        target_home = tmp[5]
+        _, _, target_uid, target_gid, _, target_home, *_ = pwd.getpwuid(user)
     else:
-        tmp = pwd.getpwnam(user)
-        target_uid = tmp[2]
-        target_home = tmp[5]
+        _, _, target_uid, target_gid, _, target_home, *_ = pwd.getpwnam(user)
 
     if os.getuid() == 0:
+        os.setgid(target_gid)
         os.setuid(target_uid)
         os.environ["HOME"] = target_home
 
-    if os.getuid() != target_uid:
-        raise Exception(f"Unable to set UID: {user}")
+    if (os.getuid(), os.getgid()) != (target_uid, target_gid):
+        raise Exception(f"Unable to set UID/GID: {user}")
