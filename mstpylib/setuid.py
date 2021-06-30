@@ -4,6 +4,7 @@
 # Description: Utility for changing uid of scripts run as root
 # End-Doc
 import os
+import sys
 import pwd
 
 __all__ = ["setuid"]
@@ -31,4 +32,5 @@ def setuid(user):
         os.environ["HOME"] = target_home
 
     if (os.getuid(), os.getgid()) != (target_uid, target_gid):
-        raise Exception(f"Unable to set UID/GID: {user}")
+        sys.stderr.write(f"Unable to set uid/gid... Exiting.\n")
+        os._exit(-1)
