@@ -53,9 +53,13 @@ def LogAPIUsage(msg=None):
     cwd = os.getcwd()
 
     if "flask" in sys.modules:
-        request = sys.modules["flask"].request
-        authuser = request.environ.get("REMOTE_USER")
-        server = request.host
+        try:
+            request = sys.modules["flask"].request
+            authuser = request.environ.get("REMOTE_USER")
+            server = request.host
+        except RuntimeError:
+            # not within a flask request, nothing to do here
+            authuser = None
 
     if usage_logger_script is None:
         usage_logger_script = sys.argv[0]
