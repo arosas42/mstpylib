@@ -52,8 +52,11 @@ def create_engine(host, **kwargs):
         )
         database = kwargs.get("database", user)
         uri = f"mysql+pymysql://{user}:{passwd}@{target_host}/{database}"
-    args = kwargs.get("connect_args")
-    if args is not None:
-        return ce(uri, connect_args=args)
-    else:
-        return ce(uri)
+
+        # do not pass/re-use these arguments in the create_engine method of sqlalchemy
+        stripkeys = ["user", "passwd", "database"]
+        for key in stripkeys:
+            if key in kwargs:
+                del kwargs[key]
+
+    return ce(uri, **kwargs)       
